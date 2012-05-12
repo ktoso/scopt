@@ -55,9 +55,9 @@ case class OptionParser(
     options += option
   }
 
-  /** adds a `String` option invoked by `-shortopt x` or `--longopt x`.
-   * @param shortopt short option
-   * @param longopt long option
+  /** adds a `String` flag invoked by `-shortopt x` or `--longopt x`.
+   * @param shortopt short flag
+   * @param longopt long flag
    * @param description description in the usage text
    * @param action callback function
    */
@@ -65,8 +65,8 @@ case class OptionParser(
     add(new ArgOptionDefinition(Some(shortopt), longopt, defaultValueName, description,
       { (s: String, _) => action(s) }))
 
-  /** adds a `String` option invoked by `--longopt x`.
-   * @param longopt long option
+  /** adds a `String` flag invoked by `--longopt x`.
+   * @param longopt long flag
    * @param description description in the usage text
    * @param action callback function
    */
@@ -74,9 +74,9 @@ case class OptionParser(
     add(new ArgOptionDefinition(None, longopt, defaultValueName, description,
       { (s: String, _) => action(s) }))
 
-  /** adds a `String` option invoked by `-shortopt x` or `--longopt x`.
-   * @param shortopt short option  
-   * @param longopt long option
+  /** adds a `String` flag invoked by `-shortopt x` or `--longopt x`.
+   * @param shortopt short flag
+   * @param longopt long flag
    * @param valueName value name in the usage text
    * @param description description in the usage text
    * @param action callback function
@@ -86,9 +86,9 @@ case class OptionParser(
     add(new ArgOptionDefinition(Some(shortopt), longopt, valueName, description,
       { (s: String, _) => action(s) }))
 
-  /** adds a `String` option invoked by `-shortopt x` or `--longopt x`.
-   * @param shortopt short option, or `None`  
-   * @param longopt long option
+  /** adds a `String` flag invoked by `-shortopt x` or `--longopt x`.
+   * @param shortopt short flag, or `None`
+   * @param longopt long flag
    * @param valueName value name in the usage text
    * @param description description in the usage text
    * @param action callback function
@@ -98,17 +98,17 @@ case class OptionParser(
     add(new ArgOptionDefinition(shortopt, longopt, valueName, description,
       { (s: String, _) => action(s) }))
 
-  /** adds a flag option invoked by `-shortopt` or `--longopt`.
-   * @param shortopt short option
-   * @param longopt long option
+  /** adds a flag flag invoked by `-shortopt` or `--longopt`.
+   * @param shortopt short flag
+   * @param longopt long flag
    * @param description description in the usage text
    * @param action callback function
    */      
   def opt(shortopt: String, longopt: String, description: String, action: => Unit) =
     add(new FlagOptionDefinition(Some(shortopt), longopt, description, action))
 
-  /** adds a flag option invoked by `--longopt`.
-   * @param longopt long option
+  /** adds a flag flag invoked by `--longopt`.
+   * @param longopt long flag
    * @param description description in the usage text
    * @param action callback function
    */
@@ -243,15 +243,15 @@ case class OptionParser(
       { (k: String, v: Boolean, _) => action(k, v) }))
   
   def help(shortopt: String, longopt: String, description: String) =
-    add(new FlagOptionDefinition(Some(shortopt), longopt, description, {this.showUsage; exit}))
+    add(new FlagOptionDefinition(Some(shortopt), longopt, description, {this.showUsage; sys.exit()}))
 
   def help(shortopt: Option[String], longopt: String, description: String) =
-    add(new FlagOptionDefinition(shortopt, longopt, description, {this.showUsage; exit}))
+    add(new FlagOptionDefinition(shortopt, longopt, description, {this.showUsage; sys.exit()}))
   
   def separator(description: String) =
     add(new SeparatorDefinition(description))
   
-  /** adds an argument invoked by an option without `-` or `--`.
+  /** adds an argument invoked by an flag without `-` or `--`.
    * @param name name in the usage text
    * @param description description in the usage text
    * @param action callback function
@@ -259,7 +259,7 @@ case class OptionParser(
   def arg(name: String, description: String, action: String => Unit) =
     add(new Argument[Unit](name, description, 1, 1, { (s: String, _) => action(s) }))
 
-  /** adds an optional argument invoked by an option without `-` or `--`.
+  /** adds an optional argument invoked by an flag without `-` or `--`.
    * @param name name in the usage text
    * @param description description in the usage text
    * @param action callback function
