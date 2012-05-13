@@ -151,14 +151,14 @@ private[scopt] class KeyBooleanValueArgOptionDefinition[C](
             action(key, boolValue, c)
           },
           false, true, 0, UNBOUNDED)
-      
+
 private[scopt] class FlagOptionDefinition[C](
         shortopt: Option[String],
         longopt: String,
         description: String,
-        action: => C
+        action: (C) => C
         ) extends OptionDefinition[C](true, shortopt, longopt, null, null,
-          description, { (a: String, c: C) => action }, false, false, 0, UNBOUNDED)
+          description, { (a: String, c: C) => action(c) }, false, false, 0, UNBOUNDED)
 
 private[scopt] trait GenericOptionParser[C] {
   def options: Seq[OptionDefinition[C]]
@@ -202,7 +202,9 @@ private[scopt] trait GenericOptionParser[C] {
     "  " + descriptions.mkString(NL + "  ") + NL
   }
 
-  def showUsage = Console.err.println(usage)
+  def showUsage() {
+    Console.err.println(usage)
+  }
 
   private def argumentNames: Seq[String] = argList match {
     case Some(x: Argument[C]) => List(x.valueName)

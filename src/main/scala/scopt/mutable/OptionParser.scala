@@ -105,7 +105,7 @@ case class OptionParser(
    * @param action callback function
    */      
   def opt(shortopt: String, longopt: String, description: String, action: => Unit) =
-    add(new FlagOptionDefinition(Some(shortopt), longopt, description, action))
+    add(new FlagOptionDefinition(Some(shortopt), longopt, description, (c: Unit) => action))
 
   /** adds a flag flag invoked by `--longopt`.
    * @param longopt long flag
@@ -113,7 +113,7 @@ case class OptionParser(
    * @param action callback function
    */
   def opt(longopt: String, description: String, action: => Unit) =
-    add(new FlagOptionDefinition(None, longopt, description, action))
+    add(new FlagOptionDefinition(None, longopt, description, (c: Unit) => action))
       
   // we have to give these typed options separate names, because of &^@$! type erasure
   def intOpt(shortopt: String, longopt: String, description: String, action: Int => Unit) =
@@ -177,7 +177,7 @@ case class OptionParser(
   def keyValueOpt(longopt: String, description: String, action: (String, String) => Unit) =
     add(new KeyValueArgOptionDefinition(None, longopt, defaultKeyName, defaultValueName, description,
       { (k: String, v: String, _) => action(k, v) }))
-  
+
   def keyValueOpt(shortopt: String, longopt: String, keyName: String, valueName: String,
       description: String, action: (String, String) => Unit) =
     add(new KeyValueArgOptionDefinition(Some(shortopt), longopt, keyName, valueName, description,
@@ -243,10 +243,10 @@ case class OptionParser(
       { (k: String, v: Boolean, _) => action(k, v) }))
   
   def help(shortopt: String, longopt: String, description: String) =
-    add(new FlagOptionDefinition(Some(shortopt), longopt, description, {this.showUsage; sys.exit()}))
+    add(new FlagOptionDefinition(Some(shortopt), longopt, description, { c => this.showUsage(); sys.exit(); () }))
 
   def help(shortopt: Option[String], longopt: String, description: String) =
-    add(new FlagOptionDefinition(shortopt, longopt, description, {this.showUsage; sys.exit()}))
+    add(new FlagOptionDefinition(shortopt, longopt, description, { c => this.showUsage(); sys.exit(); () }))
   
   def separator(description: String) =
     add(new SeparatorDefinition(description))

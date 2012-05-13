@@ -13,6 +13,7 @@ case class Config(out: String = "",
   xyz: Boolean = false,
   libname: String = null,
   libfile: String = null,
+  flag: Boolean = false,
   maxlibname: String = null,
   maxcount: Int = -1,
   whatnot: String = null,
@@ -23,6 +24,7 @@ class ImmutableTest extends FunSuite {
   val parser1 = new scopt.immutable.OptionParser[Config]("scopt") { def options = Seq(
     opt("o", "output", "output") { (v: String, c: Config) => c.copy(out = v) },
     arg("<file>", "some argument") { (v: String, c: Config) => c.copy(whatnot = v) },
+    flag("f", "flag", "Some flag description") { _.copy(flag = true) },
     intOpt("f", "foo", "foo is an integer property") { (v: Int, c: Config) => c.copy(foo = v) },
     keyValueOpt("l", "lib", "<libname>", "<filename>", "load library <libname>")
       { (key: String, value: String, c: Config) => c.copy(libname = key, libfile = value) },
@@ -38,6 +40,7 @@ class ImmutableTest extends FunSuite {
     validArguments(parser1, Config(libname = "key", libfile = "value", whatnot = "drink"), "--lib:key=value", "drink")
     validArguments(parser1, Config(maxlibname = "key", maxcount = 5, whatnot = "drink"), "--max:key=5", "drink")
     validArguments(parser1, Config(xyz = true, whatnot = "drink"), "--xyz", "true", "drink")
+    validArguments(parser1, Config(flag = true), "--flag")
   }
 
   test("invalid arguments fail") {

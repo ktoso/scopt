@@ -90,6 +90,7 @@ abstract case class OptionParser[C](
     new DoubleArgOptionDefinition(Some(shortopt), longopt, defaultValueName, description, action)
 
   def doubleOpt(longopt: String, description: String)(action: (Double, C) => C) =
+  def doubleOpt(longopt: String, description: String)(action: (Double, C) => C) =
     new DoubleArgOptionDefinition(None, longopt, defaultValueName, description, action)
       
   def doubleOpt(shortopt: String, longopt: String, valueName: String,
@@ -171,10 +172,10 @@ abstract case class OptionParser[C](
     new KeyBooleanValueArgOptionDefinition(shortopt, longopt, keyName, valueName, description, action)
   
   def help(shortopt: String, longopt: String, description: String) =
-    new FlagOptionDefinition(Some(shortopt), longopt, description, {this.showUsage(); sys.exit})
+    new FlagOptionDefinition(Some(shortopt), longopt, description, { c => showUsage(); sys.exit(); () })
 
   def help(shortopt: Option[String], longopt: String, description: String) =
-    new FlagOptionDefinition(shortopt, longopt, description, { this.showUsage(); sys.exit})
+    new FlagOptionDefinition(shortopt, longopt, description, { c => showUsage(); sys.exit(); () })
   
   def separator(description: String) =
     new SeparatorDefinition(description)
