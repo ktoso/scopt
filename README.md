@@ -23,6 +23,7 @@ val parser = new OptionParser("scopt", "1.x") {
   intOpt("f", "foo", "foo is an integer property", {v: Int => config.foo = v})
   opt("o", "output", "<file>", "output is a string property", {v: String => config.bar = v})
   booleanOpt("xyz", "xyz is a boolean property", {v: Boolean => config.xyz = v})
+  flag("flag", "a flag triggers when it is set", { config.flag = true }),
   keyValueOpt("l", "lib", "<libname>", "<filename>", "load library <libname>",
     {(key: String, value: String) => { config.libname = key; config.libfile = value } })
   arg("<singlefile>", "<singlefile> is an argument", {v: String => config.whatnot = v})
@@ -62,6 +63,7 @@ val parser = new scopt.immutable.OptionParser[Config]("scopt", "2.x") { def opti
   intOpt("f", "foo", "foo is an integer property") { (v: Int, c: Config) => c.copy(foo = v) },
   opt("o", "output", "output") { (v: String, c: Config) => c.copy(bar = v) },
   booleanOpt("xyz", "xyz is a boolean property") { (v: Boolean, c: Config) => c.copy(xyz = v) },
+  flag("flag", "a flag triggers when it is set") { c: Config => c.copy(flag = true) },
   keyValueOpt("l", "lib", "<libname>", "<filename>", "load library <libname>")
     { (key: String, value: String, c: Config) => c.copy(libname = key, libfile = value) },
   keyIntValueOpt(None, "max", "<libname>", "<max>", "maximum count for <libname>")
